@@ -4,6 +4,7 @@ import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { useAuth } from "@/app/context/auth-context"
 import { setTokens } from "@/lib/auth"
+import { login } from "@/lib/api"
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -42,29 +43,12 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      const res = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-        }),
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        setErrors({ general: data.message ?? "Invalid email or password" })
-        return
-      }
-
-      const data = await res.json()
+      const data = await login(form.email, form.password)
       setTokens(data.access_token, data.refresh_token, rememberMe)
       refreshUser()
-
       navigate("/forms")
     } catch (err) {
-      console.error(err)
-      setErrors({ general: "Something went wrong. Please try again." })
+      setErrors({ general: err instanceof Error ? err.message : "Something went wrong. Please try again." })
     } finally {
       setLoading(false)
     }

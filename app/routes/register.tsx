@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router"
 import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { useAuth } from "@/app/context/auth-context"
+import { register } from "@/lib/api"
 
 export default function RegisterPage() {
     const navigate = useNavigate()
@@ -52,25 +53,10 @@ export default function RegisterPage() {
         }
 
         try {
-            const res = await fetch("http://localhost:8080/api/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email: form.email,
-                    password: form.password,
-                }),
-            })
-
-            if (!res.ok) {
-                const data = await res.json()
-                setErrors({ email: data.message ?? "Registration failed" })
-                return
-            }
-
+            await register(form.email, form.password)
             navigate("/login")
         } catch (err) {
-            console.error(err)
-            setErrors({ email: "Something went wrong. Please try again." })
+            setErrors({ email: err instanceof Error ? err.message : "Something went wrong. Please try again." })
         }
     }
 

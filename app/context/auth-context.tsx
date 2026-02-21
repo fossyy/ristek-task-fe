@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useNavigate } from "react-router"
-import { type User, getUser, getUserAsync, logout as logoutUser } from "@/lib/auth"
+import { type User, getUser } from "@/lib/auth"
+import { getUserAsync, logout as logoutUser } from "@/lib/api"
 
 interface AuthContextType {
   user: User | null
