@@ -1,16 +1,73 @@
-"use client"
-
-import { Link } from "react-router";
-import { useNavigate } from "react-router";
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router"
 import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
+import { useAuth } from "@/app/context/auth-context"
+import { setTokens } from "@/lib/auth"
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const { user, loading: authLoading, refreshUser } = useAuth()
 
-  function handleSubmit(e: React.FormEvent) {
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate("/forms")
+    }
+  }, [user, authLoading, navigate])
+
+  const [form, setForm] = useState({ email: "", password: "" })
+  const [rememberMe, setRememberMe] = useState(false)
+  const [errors, setErrors] = useState<Partial<typeof form & { general: string }>>({})
+  const [loading, setLoading] = useState(false)
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }))
+  }
+
+  function validate() {
+    const newErrors: Partial<typeof form> = {}
+    if (!form.email.trim()) newErrors.email = "Email is required"
+    if (!form.password) newErrors.password = "Password is required"
+    return newErrors
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    navigate("/forms")
+    const newErrors = validate()
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setLoading(true)
+    try {
+      const res = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        setErrors({ general: data.message ?? "Invalid email or password" })
+        return
+      }
+
+      const data = await res.json()
+      setTokens(data.access_token, data.refresh_token, rememberMe)
+      refreshUser()
+
+      navigate("/forms")
+    } catch (err) {
+      console.error(err)
+      setErrors({ general: "Something went wrong. Please try again." })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -28,25 +85,41 @@ export default function LoginPage() {
 
           <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              {errors.general && (
+                <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {errors.general}
+                </p>
+              )}
+
               <FormInput
                 label="Email"
                 type="email"
+                name="email"
                 placeholder="bagas@example.com"
                 required
                 autoComplete="email"
+                value={form.email}
+                onChange={handleChange}
+                error={errors.email}
               />
               <FormInput
                 label="Password"
                 type="password"
+                name="password"
                 placeholder="Enter your password"
                 required
                 autoComplete="current-password"
+                value={form.password}
+                onChange={handleChange}
+                error={errors.password}
               />
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 text-sm text-muted-foreground">
                   <input
                     type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                     className="h-4 w-4 rounded border-input accent-primary"
                   />
                   Remember me
@@ -59,12 +132,15 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              <FormButton type="submit" size="lg" className="mt-2 w-full">
-                Sign in
+              <FormButton
+                type="submit"
+                size="lg"
+                className="mt-2 w-full"
+                disabled={loading}
+              >
+                {loading ? "Signing in..." : "Sign in"}
               </FormButton>
             </form>
-
-
           </div>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
