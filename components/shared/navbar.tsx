@@ -1,19 +1,19 @@
-"use client"
-
-import { Link } from "react-router";
-import { useLocation } from "react-router";
-import {  LogOut, Menu, X } from "lucide-react"
+import { Link, useLocation } from "react-router"
+import { LogIn, LogOut, Menu, X } from "lucide-react"
 import { useState } from "react"
+import { useAuth } from "@/app/context/auth-context"
 
 const navLinks = [
   { href: "/forms", label: "My Forms" },
 ]
 
 export function Navbar() {
-const { pathname } = useLocation();
-const [mobileOpen, setMobileOpen] = useState(false);
+  const { pathname } = useLocation()
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const { user, logout } = useAuth()
 
-const isAuthPage = pathname === "/login" || pathname === "/register";
+  const isAuthPage = pathname === "/login" || pathname === "/register"
+  const isLoggedIn = !!user
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
@@ -24,7 +24,7 @@ const isAuthPage = pathname === "/login" || pathname === "/register";
           </span>
         </Link>
 
-        {!isAuthPage && (
+        {!isAuthPage && isLoggedIn && (
           <>
             <div className="hidden items-center gap-6 md:flex">
               {navLinks.map((link) => (
@@ -44,15 +44,15 @@ const isAuthPage = pathname === "/login" || pathname === "/register";
 
             <div className="hidden items-center gap-4 md:flex">
               <span className="text-sm text-muted-foreground">
-                bagas@example.com
+                {user?.email}
               </span>
-              <Link
-                to="/login"
+              <button
+                onClick={logout}
                 className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
                 <LogOut className="h-4 w-4" />
                 Logout
-              </Link>
+              </button>
             </div>
 
             <button
@@ -67,6 +67,24 @@ const isAuthPage = pathname === "/login" || pathname === "/register";
               )}
             </button>
           </>
+        )}
+
+        {!isAuthPage && !isLoggedIn && (
+          <div className="flex items-center gap-3">
+            <Link
+              to="/login"
+              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              <LogIn className="h-4 w-4" />
+              Log in
+            </Link>
+            <Link
+              to="/register"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              Sign up
+            </Link>
+          </div>
         )}
 
         {isAuthPage && (
@@ -91,7 +109,7 @@ const isAuthPage = pathname === "/login" || pathname === "/register";
         )}
       </nav>
 
-      {!isAuthPage && mobileOpen && (
+      {!isAuthPage && isLoggedIn && mobileOpen && (
         <div className="border-t border-border bg-card px-4 pb-4 pt-2 md:hidden">
           {navLinks.map((link) => (
             <Link
@@ -109,16 +127,15 @@ const isAuthPage = pathname === "/login" || pathname === "/register";
           ))}
           <div className="mt-2 border-t border-border pt-2">
             <span className="block px-3 py-1 text-sm text-muted-foreground">
-              bagas@example.com
+              {user?.email}
             </span>
-            <Link
-              to="/login"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary"
+            <button
+              onClick={() => { setMobileOpen(false); logout() }}
+              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary w-full text-left"
             >
               <LogOut className="h-4 w-4" />
               Logout
-            </Link>
+            </button>
           </div>
         </div>
       )}

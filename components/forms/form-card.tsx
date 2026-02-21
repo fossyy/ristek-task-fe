@@ -4,12 +4,12 @@ import {
   FileText,
   MessageSquare,
 } from "lucide-react"
-import type { Form } from "@/lib/dummy-data"
+import type { FormSummary } from "@/lib/types"
 import { FormButton } from "@/components/shared/form-button"
 import { Link } from "react-router";
 
 interface FormCardProps {
-  form: Form
+  form: FormSummary
 }
 
 export function FormCard({ form }: FormCardProps) {
@@ -30,21 +30,17 @@ export function FormCard({ form }: FormCardProps) {
 
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <FileText className="h-3.5 w-3.5" />
-            {form.questions.length} questions
-          </span>
-          <span className="flex items-center gap-1">
             <MessageSquare className="h-3.5 w-3.5" />
-            {form.responseCount} responses
+            {form.response_count} responses
           </span>
           <span className="flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5" />
-            {form.updatedAt}
+            {new Date(form.updated_at).toLocaleDateString()}
           </span>
         </div>
 
         <div className="mt-4 border-t border-border pt-4">
-          <Link to={`/forms/${form.id}`}>
+          <Link to={`/form/${form.id}`}>
             <FormButton variant="outline" size="sm" className="w-full">
               <Eye className="h-3.5 w-3.5" />
               Preview Form

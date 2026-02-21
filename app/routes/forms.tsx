@@ -1,18 +1,56 @@
-"use client"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useNavigate, Link } from "react-router"
 import { Plus, Search } from "lucide-react"
-import { dummyForms } from "@/lib/dummy-data"
 import { Navbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
 import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { FormCard } from "@/components/forms/form-card"
+import { useAuth } from "@/app/context/auth-context"
+import { getForms } from "@/lib/api"
+import type { FormSummary } from "@/lib/types"
 
 export default function FormsPage() {
+  const { user, loading } = useAuth()
+  const navigate = useNavigate()
   const [search, setSearch] = useState("")
+  const [forms, setForms] = useState<FormSummary[]>([])
+  const [loadingForms, setLoadingForms] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const filtered = dummyForms.filter((form) => {
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login")
+    }
+  }, [user, loading, navigate])
+
+  useEffect(() => {
+    if (!user) return
+
+    async function fetchForms() {
+      try {
+        const data = await getForms()
+        setForms(data)
+      } catch {
+        setError("Failed to load forms. Please try again.")
+      } finally {
+        setLoadingForms(false)
+      }
+    }
+    fetchForms()
+  }, [user])
+
+  if (loading || loadingForms) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    )
+  }
+
+  if (!user) return null
+
+  const filtered = forms.filter((form) => {
     return (
       form.title.toLowerCase().includes(search.toLowerCase()) ||
       form.description.toLowerCase().includes(search.toLowerCase())
@@ -32,10 +70,12 @@ export default function FormsPage() {
                 Manage and preview all your forms in one place
               </p>
             </div>
-            <FormButton size="md">
-              <Plus className="h-4 w-4" />
-              New Form
-            </FormButton>
+            <Link to="/forms/new">
+              <FormButton size="md">
+                <Plus className="h-4 w-4" />
+                New Form
+              </FormButton>
+            </Link>
           </div>
 
           <div className="mb-6">
@@ -51,10 +91,22 @@ export default function FormsPage() {
           </div>
 
           <p className="mb-4 text-sm text-muted-foreground">
-            Showing {filtered.length} of {dummyForms.length} forms
+            Showing {filtered.length} of {forms.length} forms
           </p>
 
-          {filtered.length > 0 ? (
+          {error ? (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16">
+              <p className="text-sm text-destructive">{error}</p>
+              <FormButton
+                variant="ghost"
+                size="sm"
+                className="mt-3"
+                onClick={() => window.location.reload()}
+              >
+                Retry
+              </FormButton>
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="grid gap-5 sm:grid-cols-2">
               {filtered.map((form) => (
                 <FormCard key={form.id} form={form} />

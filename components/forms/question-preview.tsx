@@ -3,7 +3,7 @@ import {
   ChevronDown,
   Star,
 } from "lucide-react"
-import type { Question } from "@/lib/dummy-data"
+import type { Question } from "@/lib/types"
 
 interface QuestionPreviewProps {
   question: Question
@@ -13,7 +13,6 @@ interface QuestionPreviewProps {
 export function QuestionPreview({ question, index }: QuestionPreviewProps) {
   return (
     <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      {/* Question header */}
       <div className="mb-4 flex items-start gap-3">
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-xs font-semibold text-primary">
           {index + 1}
@@ -31,7 +30,6 @@ export function QuestionPreview({ question, index }: QuestionPreviewProps) {
         </div>
       </div>
 
-      {/* Read-only field preview */}
       <div className="pl-10">
         {question.type === "short_text" && (
           <div className="rounded-lg border border-input bg-muted/50 px-3.5 py-2.5 text-sm text-muted-foreground">
@@ -45,29 +43,29 @@ export function QuestionPreview({ question, index }: QuestionPreviewProps) {
           </div>
         )}
 
-        {question.type === "multiple_choice" && question.options && (
+        {question.type === "multiple_choice" && question.options.length > 0 && (
           <div className="flex flex-col gap-2.5">
             {question.options.map((option) => (
               <label
-                key={option}
+                key={option.id}
                 className="flex items-center gap-2.5 text-sm text-foreground"
               >
                 <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 border-input" />
-                {option}
+                {option.label}
               </label>
             ))}
           </div>
         )}
 
-        {question.type === "checkbox" && question.options && (
+        {question.type === "checkbox" && question.options.length > 0 && (
           <div className="flex flex-col gap-2.5">
             {question.options.map((option) => (
               <label
-                key={option}
+                key={option.id}
                 className="flex items-center gap-2.5 text-sm text-foreground"
               >
                 <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 border-input" />
-                {option}
+                {option.label}
               </label>
             ))}
           </div>
