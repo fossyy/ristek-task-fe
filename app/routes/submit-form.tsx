@@ -32,7 +32,6 @@ export default function SubmitFormPage() {
       try {
         const data = await getFormById(id!)
         setForm(data)
-        // Initialize empty answers
         const initial: Record<string, string> = {}
         data.questions.forEach((q) => {
           initial[q.id] = ""
@@ -53,7 +52,6 @@ export default function SubmitFormPage() {
 
   function updateAnswer(questionId: string, value: string) {
     setAnswers((prev) => ({ ...prev, [questionId]: value }))
-    // Clear validation error on change
     if (validationErrors[questionId]) {
       setValidationErrors((prev) => {
         const next = { ...prev }
@@ -82,7 +80,6 @@ export default function SubmitFormPage() {
     if (!id || !form) return
 
     if (!validate()) {
-      // Scroll to first error
       const firstErrorId = form.questions.find((q) => validationErrors[q.id] || (q.required && !answers[q.id]?.trim()))?.id
       if (firstErrorId) {
         document.getElementById(`question-${firstErrorId}`)?.scrollIntoView({ behavior: "smooth", block: "center" })
@@ -161,7 +158,6 @@ export default function SubmitFormPage() {
                   size="sm"
                   onClick={() => {
                     setSubmitted(false)
-                    // Reset answers
                     if (form) {
                       const initial: Record<string, string> = {}
                       form.questions.forEach((q) => { initial[q.id] = "" })
@@ -269,8 +265,6 @@ export default function SubmitFormPage() {
     </div>
   )
 }
-
-// ─── Question field component ────────────────────────────────────────────────
 
 interface QuestionFieldProps {
   question: Question

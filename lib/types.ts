@@ -75,3 +75,16 @@ export interface SubmitFormAnswer {
 export interface SubmitFormPayload {
   answers: SubmitFormAnswer[]
 }
+
+export interface FormResponseAnswer {
+  question_id: string
+  question_title: string
+  question_type: QuestionType
+  answer: string
+}
+
+export interface FormResponse {
+  id: string
+  submitted_at: string
+  answers: FormResponseAnswer[]
+}

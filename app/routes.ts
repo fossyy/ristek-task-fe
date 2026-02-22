@@ -8,6 +8,7 @@ export default [
     route("forms/new", "routes/create-form.tsx"),
     route("form/:id", "routes/form.tsx"),
     route("form/:id/submit", "routes/submit-form.tsx"),
+    route("form/:id/responses", "routes/form-responses.tsx"),
     route("form/:id/edit", "routes/edit-form.tsx"),
     route("*", "routes/not-found.tsx"),
 ] satisfies RouteConfig;

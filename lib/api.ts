@@ -6,7 +6,7 @@ import {
   isTokenExpired,
   decodeJWT,
 } from "@/lib/auth"
-import type { FormSummary, FormDetail, CreateFormPayload, UpdateFormPayload, SubmitFormPayload } from "@/lib/types"
+import type { FormSummary, FormDetail, CreateFormPayload, UpdateFormPayload, SubmitFormPayload, FormResponse } from "@/lib/types"
 
 export async function refreshAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
@@ -232,4 +232,17 @@ export async function deleteForm(id: string): Promise<void> {
     const data = await res.json().catch(() => null)
     throw new Error(data?.message ?? "Failed to delete form")
   }
+}
+
+export async function getFormResponses(id: string): Promise<FormResponse[]> {
+  const res = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/api/form/${id}/responses`)
+
+  if (!res.ok) {
+    if (res.status === 404) {
+      throw new Response("Form not found", { status: 404 })
+    }
+    throw new Error("Failed to fetch form responses")
+  }
+
+  return res.json()
 }

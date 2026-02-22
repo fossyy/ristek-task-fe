@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Link, useParams, useNavigate } from "react-router"
 import {
   ArrowLeft,
+  BarChart3,
   Calendar,
   FileText,
   Lock,
@@ -142,6 +143,12 @@ export default function FormPreviewPage() {
 
               {user && user.id === form.user_id && (
                 <div className="mt-5 flex items-center gap-3 border-t border-border pt-5">
+                  <Link to={`/form/${id}/responses`}>
+                    <FormButton type="button" variant="ghost" size="sm">
+                      <BarChart3 className="h-4 w-4" />
+                      Responses
+                    </FormButton>
+                  </Link>
                   <Link to={`/form/${id}/edit`}>
                     <FormButton type="button" variant="ghost" size="sm">
                       <Pencil className="h-4 w-4" />

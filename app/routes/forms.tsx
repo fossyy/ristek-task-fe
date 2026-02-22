@@ -63,13 +63,11 @@ export default function FormsPage() {
     }
   }, [])
 
-  // Initial fetch
   useEffect(() => {
     if (!user) return
     fetchForms({ search, statusFilter, sortBy, sortDir })
-  }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user])
 
-  // Debounced fetch when filters change (skip initial)
   useEffect(() => {
     if (!user || isInitialLoad.current) return
 
