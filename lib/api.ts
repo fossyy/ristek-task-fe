@@ -120,8 +120,6 @@ export async function register(email: string, password: string) {
     const data = await res.json().catch(() => null)
     throw new Error(data?.message ?? "Registration failed")
   }
-
-  return res.json()
 }
 
 export async function logout() {
@@ -145,8 +143,22 @@ export async function logout() {
   clearTokens()
 }
 
-export async function getForms(): Promise<FormSummary[]> {
-  const res = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/api/forms`)
+export interface GetFormsParams {
+  search?: string
+  status?: "has_responses" | "no_responses"
+  sort_by?: "created_at" | "updated_at"
+  sort_dir?: "newest" | "oldest"
+}
+
+export async function getForms(params: GetFormsParams = {}): Promise<FormSummary[]> {
+  const url = new URL(`${import.meta.env.VITE_API_BASE_URL}/api/forms`)
+
+  if (params.search) url.searchParams.set("search", params.search)
+  if (params.status) url.searchParams.set("status", params.status)
+  if (params.sort_by) url.searchParams.set("sort_by", params.sort_by)
+  if (params.sort_dir) url.searchParams.set("sort_dir", params.sort_dir)
+
+  const res = await fetchWithAuth(url.toString())
 
   if (!res.ok) {
     throw new Error("Failed to fetch forms")
