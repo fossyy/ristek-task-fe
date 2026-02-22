@@ -6,7 +6,7 @@ import {
   isTokenExpired,
   decodeJWT,
 } from "@/lib/auth"
-import type { FormSummary, FormDetail, CreateFormPayload, UpdateFormPayload } from "@/lib/types"
+import type { FormSummary, FormDetail, CreateFormPayload, UpdateFormPayload, SubmitFormPayload } from "@/lib/types"
 
 export async function refreshAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
@@ -208,6 +208,19 @@ export async function updateForm(id: string, payload: UpdateFormPayload): Promis
   }
 
   return res.json()
+}
+
+export async function submitFormResponse(id: string, payload: SubmitFormPayload): Promise<void> {
+  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/form/${id}/response`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  })
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => null)
+    throw new Error(data?.message ?? "Failed to submit form response")
+  }
 }
 
 export async function deleteForm(id: string): Promise<void> {

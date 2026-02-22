@@ -175,11 +175,13 @@ export default function FormPreviewPage() {
 
           <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-card/50 p-6">
             <p className="text-sm text-muted-foreground">
-              This is a read-only preview. Form submission is disabled.
+              This is a read-only preview. Click below to fill out this form.
             </p>
-            <FormButton disabled size="lg">
-              Submit (Preview Mode)
-            </FormButton>
+            <Link to={`/form/${id}/submit`}>
+              <FormButton size="lg">
+                Fill Out Form
+              </FormButton>
+            </Link>
           </div>
 
           <div className="mt-6 flex justify-center">

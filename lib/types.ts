@@ -66,3 +66,12 @@ export interface UpdateFormPayload {
   description: string
   questions: CreateQuestion[]
 }
+
+export interface SubmitFormAnswer {
+  question_id: string
+  answer: string
+}
+
+export interface SubmitFormPayload {
+  answers: SubmitFormAnswer[]
+}
