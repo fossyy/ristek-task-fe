@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  be:
+    image: git.fossy.my.id/bagas/ristek-task-be:latest
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/ristek?sslmode=disable
+    ports:
+      - "8080:8080"
+      
+  fe:
+    build: 
+      context: .
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    restart: always
+    ports:
+      - "3000:3000"
+
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ristek
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres_data:
