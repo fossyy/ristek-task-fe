@@ -19,7 +19,7 @@
   --accent: oklch(0.96 0.005 285);
   --accent-foreground: oklch(0.30 0.05 300);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.99 0 0);
   --border: oklch(0.91 0.005 285);
   --input: oklch(0.91 0.005 285);
   --ring: oklch(0.30 0.05 300);
@@ -124,8 +124,6 @@
   }
 }
 
-/* ── Animation keyframes ── */
-
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -172,8 +170,6 @@
   50% { opacity: 0.7; }
 }
 
-/* ── Utility classes ── */
-
 .animate-fade-in {
   animation: fade-in 0.5s ease-out both;
 }
@@ -212,7 +208,6 @@
   animation: pulse-soft 2s ease-in-out infinite;
 }
 
-/* Stagger delays for children */
 .stagger-1 { animation-delay: 0.05s; }
 .stagger-2 { animation-delay: 0.1s; }
 .stagger-3 { animation-delay: 0.15s; }
@@ -222,7 +217,6 @@
 .stagger-7 { animation-delay: 0.35s; }
 .stagger-8 { animation-delay: 0.4s; }
 
-/* Button press effect */
 .btn-press {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -235,7 +229,6 @@
   box-shadow: none;
 }
 
-/* Card hover lift */
 .card-hover {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -244,7 +237,6 @@
   box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.12);
 }
 
-/* Smooth loading skeleton */
 .skeleton {
   background: linear-gradient(90deg, var(--muted) 25%, var(--accent) 50%, var(--muted) 75%);
   background-size: 200% 100%;
@@ -252,7 +244,6 @@
   border-radius: 0.5rem;
 }
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-fade-in-up,

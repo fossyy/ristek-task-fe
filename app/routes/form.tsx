@@ -206,7 +206,7 @@ export default function FormPreviewPage() {
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="mx-4 w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-lg">
-            <h2 className="text-lg font-semibold text-foreground">Delete Form</h2>
+            <h2 className="text-lg font-semibold text-card-foreground">Delete Form</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Are you sure you want to delete this form? This action cannot be
               undone.

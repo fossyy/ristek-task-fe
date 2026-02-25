@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { useNavigate, Link } from "react-router"
-import { Plus, Search, Filter, ArrowUpDown, Loader2 } from "lucide-react"
+import { Plus, Loader2 } from "lucide-react"
 import { Navbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
-import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { FormCard } from "@/components/forms/form-card"
+import { FormsToolbar } from "@/components/forms/forms-toolbar"
 import { useAuth } from "@/app/context/auth-context"
 import { getForms } from "@/lib/api"
 import type { FormSummary } from "@/lib/types"
@@ -122,54 +122,17 @@ export default function FormsPage() {
             </Link>
           </div>
 
-          <div className="mb-6 flex flex-col gap-3">
-            <div className="relative w-full sm:max-w-md">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <FormInput
-                placeholder="Search forms by title..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2">
-              <div className="relative col-span-2 sm:col-span-1">
-                <Filter className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-                  className="h-10 w-full appearance-none rounded-lg border border-border bg-card pl-8 pr-8 text-sm text-foreground shadow-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="all">All Status</option>
-                  <option value="has_responses">Has Responses</option>
-                  <option value="no_responses">No Responses</option>
-                </select>
-              </div>
-
-              <div className="relative">
-                <ArrowUpDown className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortBy)}
-                  className="h-10 w-full appearance-none rounded-lg border border-border bg-card pl-8 pr-8 text-sm text-foreground shadow-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="created_at">Sort: Created</option>
-                  <option value="updated_at">Sort: Updated</option>
-                </select>
-              </div>
-
-              <div className="relative">
-                <select
-                  value={sortDir}
-                  onChange={(e) => setSortDir(e.target.value as SortDir)}
-                  className="h-10 w-full appearance-none rounded-lg border border-border bg-card pl-8 pr-8 text-sm text-foreground shadow-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="newest">Newest first</option>
-                  <option value="oldest">Oldest first</option>
-                </select>
-              </div>
-            </div>
+          <div className="mb-6">
+            <FormsToolbar
+              search={search}
+              status={statusFilter}
+              sortBy={sortBy}
+              sortDir={sortDir}
+              onSearchChange={setSearch}
+              onStatusChange={setStatusFilter}
+              onSortChange={setSortBy}
+              onOrderChange={setSortDir}
+            />
           </div>
 
           <div className="mb-4 flex items-center justify-between">

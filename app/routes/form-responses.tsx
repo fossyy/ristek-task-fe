@@ -129,7 +129,6 @@ export default function FormResponsesPage() {
             Back to form
           </Link>
 
-          {/* Header */}
           <div className="mb-8 rounded-xl border border-border bg-card shadow-sm animate-float-in">
             <div className="h-2 rounded-t-xl bg-primary" />
             <div className="p-6">
@@ -152,7 +151,6 @@ export default function FormResponsesPage() {
                 </div>
               </div>
 
-              {/* Stats */}
               <div className="mt-5 grid grid-cols-2 gap-4 border-t border-border pt-5 sm:grid-cols-4">
                 <StatCard
                   icon={<Users className="h-4 w-4 text-primary" />}
@@ -182,7 +180,6 @@ export default function FormResponsesPage() {
             </div>
           </div>
 
-          {/* Tabs */}
           <div className="mb-6 flex gap-1 rounded-lg border border-border bg-card p-1 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
             <button
               onClick={() => setActiveTab("summary")}
@@ -578,7 +575,6 @@ function IndividualTab({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Navigation */}
       <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-sm">
         <button
           onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
@@ -606,7 +602,6 @@ function IndividualTab({
         </button>
       </div>
 
-      {/* Answers */}
       <div className="flex flex-col gap-4">
         {form.questions.map((question, index) => {
           const answer = current.answers.find(
