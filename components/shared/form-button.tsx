@@ -34,6 +34,7 @@ export const FormButton = forwardRef<HTMLButtonElement, FormButtonProps>(
         className={cn(
           "inline-flex items-center justify-center gap-2 font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
+          "btn-press",
           variantStyles[variant],
           sizeStyles[size],
           className

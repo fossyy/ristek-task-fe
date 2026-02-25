@@ -130,7 +130,7 @@ export default function FormResponsesPage() {
           </Link>
 
           {/* Header */}
-          <div className="mb-8 rounded-xl border border-border bg-card shadow-sm">
+          <div className="mb-8 rounded-xl border border-border bg-card shadow-sm animate-float-in">
             <div className="h-2 rounded-t-xl bg-primary" />
             <div className="p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -183,7 +183,7 @@ export default function FormResponsesPage() {
           </div>
 
           {/* Tabs */}
-          <div className="mb-6 flex gap-1 rounded-lg border border-border bg-card p-1">
+          <div className="mb-6 flex gap-1 rounded-lg border border-border bg-card p-1 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
             <button
               onClick={() => setActiveTab("summary")}
               className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${

@@ -207,8 +207,10 @@ export default function FormsPage() {
             </div>
           ) : forms.length > 0 ? (
             <div className="grid gap-5 sm:grid-cols-2">
-              {forms.map((form) => (
-                <FormCard key={form.id} form={form} />
+              {forms.map((form, index) => (
+                <div key={form.id} className="animate-float-in" style={{ animationDelay: `${index * 0.08}s` }}>
+                  <FormCard form={form} />
+                </div>
               ))}
             </div>
           ) : (

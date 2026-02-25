@@ -104,7 +104,7 @@ export default function FormPreviewPage() {
             Back to forms
           </Link>
 
-          <div className="mb-8 rounded-xl border border-border bg-card shadow-sm">
+          <div className="mb-8 rounded-xl border border-border bg-card shadow-sm animate-float-in">
             <div className="h-2 rounded-t-xl bg-primary" />
             <div className="p-6">
               <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -172,15 +172,16 @@ export default function FormPreviewPage() {
 
           <div className="flex flex-col gap-4">
             {form.questions.map((question, index) => (
-              <QuestionPreview
-                key={question.id}
-                question={question}
-                index={index}
-              />
+              <div key={question.id} className="animate-fade-in-up" style={{ animationDelay: `${0.15 + index * 0.08}s` }}>
+                <QuestionPreview
+                  question={question}
+                  index={index}
+                />
+              </div>
             ))}
           </div>
 
-          <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-card/50 p-6">
+          <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-card/50 p-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <p className="text-sm text-muted-foreground">
               This is a read-only preview. Click below to fill out this form.
             </p>

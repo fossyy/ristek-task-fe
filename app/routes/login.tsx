@@ -58,7 +58,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <div className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          <div className="mb-8 flex flex-col items-center gap-3">
+          <div className="mb-8 flex flex-col items-center gap-3 animate-fade-in-down">
             <h1 className="text-2xl font-bold text-foreground">
               Welcome back
             </h1>
@@ -67,7 +67,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm animate-float-in" style={{ animationDelay: '0.15s' }}>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               {errors.general && (
                 <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -127,7 +127,7 @@ export default function LoginPage() {
             </form>
           </div>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="mt-6 text-center text-sm text-muted-foreground animate-fade-in" style={{ animationDelay: '0.3s' }}>
             {"Don't have an account? "}
             <Link
               to="/register"

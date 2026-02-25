@@ -14,7 +14,7 @@ interface FormCardProps {
 
 export function FormCard({ form }: FormCardProps) {
   return (
-    <div className="group flex flex-col rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
+    <div className="group flex flex-col rounded-xl border border-border bg-card shadow-sm card-hover">
       <div className="h-1.5 rounded-t-xl bg-primary" />
 
       <div className="flex flex-1 flex-col p-5">

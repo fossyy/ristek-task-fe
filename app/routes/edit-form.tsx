@@ -123,7 +123,7 @@ export default function EditFormPage() {
             Back to form
           </Link>
 
-          <h1 className="mb-6 text-2xl font-bold text-foreground">
+          <h1 className="mb-6 text-2xl font-bold text-foreground animate-fade-in-up">
             Edit Form
           </h1>
 
@@ -134,7 +134,7 @@ export default function EditFormPage() {
               </div>
             )}
 
-            <div className="mb-8 rounded-xl border border-border bg-card p-6 shadow-sm">
+            <div className="mb-8 rounded-xl border border-border bg-card p-6 shadow-sm animate-float-in" style={{ animationDelay: '0.1s' }}>
               <div className="h-2 -mx-6 -mt-6 mb-6 rounded-t-xl bg-primary" />
               <div className="flex flex-col gap-4">
                 <FormInput

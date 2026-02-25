@@ -140,8 +140,8 @@ export default function SubmitFormPage() {
       <div className="flex min-h-screen flex-col bg-background">
         <Navbar />
         <main className="flex flex-1 items-center justify-center">
-          <div className="mx-4 flex max-w-md flex-col items-center rounded-xl border border-border bg-card p-8 text-center shadow-sm">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+          <div className="mx-4 flex max-w-md flex-col items-center rounded-xl border border-border bg-card p-8 text-center shadow-sm animate-scale-in">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 animate-scale-bounce">
               <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
             </div>
             <h2 className="text-xl font-bold text-foreground">
@@ -198,7 +198,7 @@ export default function SubmitFormPage() {
             Back to form preview
           </Link>
 
-          <div className="mb-8 rounded-xl border border-border bg-card shadow-sm">
+          <div className="mb-8 rounded-xl border border-border bg-card shadow-sm animate-float-in">
             <div className="h-2 rounded-t-xl bg-primary" />
             <div className="p-6">
               <h1 className="text-xl font-bold text-foreground text-balance sm:text-2xl">
@@ -223,14 +223,15 @@ export default function SubmitFormPage() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {form.questions.map((question, index) => (
-              <QuestionField
-                key={question.id}
-                question={question}
-                index={index}
-                value={answers[question.id] ?? ""}
-                onChange={(val) => updateAnswer(question.id, val)}
-                error={validationErrors[question.id]}
-              />
+              <div key={question.id} className="animate-fade-in-up" style={{ animationDelay: `${0.1 + index * 0.08}s` }}>
+                <QuestionField
+                  question={question}
+                  index={index}
+                  value={answers[question.id] ?? ""}
+                  onChange={(val) => updateAnswer(question.id, val)}
+                  error={validationErrors[question.id]}
+                />
+              </div>
             ))}
 
             <div className="mt-4 flex items-center justify-between">
