@@ -8,6 +8,7 @@ import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { QuestionEditor } from "@/components/forms/question-editor"
 import { useAuth } from "@/app/context/auth-context"
+import { useToast } from "@/app/context/toast-context"
 import { createForm } from "@/lib/api"
 import type { CreateQuestion } from "@/lib/types"
 
@@ -15,6 +16,7 @@ const TYPES_WITH_OPTIONS = ["multiple_choice", "checkbox", "dropdown"]
 
 export default function CreateFormPage() {
   const { user, loading: authLoading } = useAuth()
+  const { success, error: showError } = useToast()
   const navigate = useNavigate()
 
   const [title, setTitle] = useState("")
@@ -65,9 +67,12 @@ export default function CreateFormPage() {
         description: description.trim(),
         questions,
       })
+      success("Form created successfully!")
       navigate(`/form/${result.id}`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create form.")
+      const msg = err instanceof Error ? err.message : "Failed to create form."
+      showError(msg)
+      setError(msg)
     } finally {
       setSubmitting(false)
     }

@@ -7,6 +7,7 @@ import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { QuestionEditor } from "@/components/forms/question-editor"
 import { useAuth } from "@/app/context/auth-context"
+import { useToast } from "@/app/context/toast-context"
 import { getFormById, updateForm } from "@/lib/api"
 import type { CreateQuestion } from "@/lib/types"
 
@@ -15,6 +16,7 @@ const TYPES_WITH_OPTIONS = ["multiple_choice", "checkbox", "dropdown"]
 export default function EditFormPage() {
   const { id } = useParams()
   const { user, loading: authLoading } = useAuth()
+  const { success, error: showError } = useToast()
   const navigate = useNavigate()
 
   const [title, setTitle] = useState("")
@@ -101,9 +103,12 @@ export default function EditFormPage() {
         description: description.trim(),
         questions,
       })
+      success("Form updated successfully!")
       navigate(`/form/${id}`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update form.")
+      const msg = err instanceof Error ? err.message : "Failed to update form."
+      showError(msg)
+      setError(msg)
     } finally {
       setSubmitting(false)
     }

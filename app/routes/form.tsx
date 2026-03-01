@@ -17,12 +17,14 @@ import { FormButton } from "@/components/shared/form-button"
 import { QuestionPreview } from "@/components/forms/question-preview"
 import { getFormById, deleteForm } from "@/lib/api"
 import { useAuth } from "@/app/context/auth-context"
+import { useToast } from "@/app/context/toast-context"
 import type { FormDetail } from "@/lib/types"
 
 export default function FormPreviewPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { success, error: showError } = useToast()
   const [form, setForm] = useState<FormDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -57,9 +59,10 @@ export default function FormPreviewPage() {
     setDeleting(true)
     try {
       await deleteForm(id)
+      success("Form deleted successfully.")
       navigate("/forms")
     } catch {
-      setError("Failed to delete form.")
+      showError("Failed to delete form.")
       setShowDeleteConfirm(false)
     } finally {
       setDeleting(false)

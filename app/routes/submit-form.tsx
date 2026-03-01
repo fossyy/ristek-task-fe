@@ -12,6 +12,7 @@ import {
 import { Navbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
 import { FormButton } from "@/components/shared/form-button"
+import { useToast } from "@/app/context/toast-context"
 import { getFormById, submitFormResponse } from "@/lib/api"
 import type { FormDetail, Question } from "@/lib/types"
 
@@ -24,6 +25,7 @@ export default function SubmitFormPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
+  const { success, error: showError } = useToast()
 
   useEffect(() => {
     if (!id) return
@@ -98,9 +100,12 @@ export default function SubmitFormPage() {
             answer: answers[q.id].trim(),
           })),
       })
+      success("Response submitted successfully!")
       setSubmitted(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to submit response")
+      const msg = err instanceof Error ? err.message : "Failed to submit response"
+      showError(msg)
+      setError(msg)
     } finally {
       setSubmitting(false)
     }

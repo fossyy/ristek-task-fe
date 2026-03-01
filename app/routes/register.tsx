@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router"
 import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { useAuth } from "@/app/context/auth-context"
+import { useToast } from "@/app/context/toast-context"
 import { register } from "@/lib/api"
 
 export default function RegisterPage() {
     const navigate = useNavigate()
     const { user, loading: authLoading } = useAuth()
+    const { success, error: showError } = useToast()
 
     useEffect(() => {
         if (!authLoading && user) {
@@ -50,9 +52,12 @@ export default function RegisterPage() {
 
         try {
             await register(form.email, form.password)
+            success("Account created successfully! Please sign in.")
             navigate("/login")
         } catch (err) {
-            setErrors({ email: err instanceof Error ? err.message : "Something went wrong. Please try again." })
+            const msg = err instanceof Error ? err.message : "Something went wrong. Please try again."
+            showError(msg)
+            setErrors({ email: msg })
         }
     }
 

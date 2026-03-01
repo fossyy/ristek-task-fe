@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router"
 import { FormInput } from "@/components/shared/form-input"
 import { FormButton } from "@/components/shared/form-button"
 import { useAuth } from "@/app/context/auth-context"
+import { useToast } from "@/app/context/toast-context"
 import { setTokens } from "@/lib/auth"
 import { login } from "@/lib/api"
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { user, loading: authLoading, refreshUser } = useAuth()
+  const { success, error: showError } = useToast()
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -46,9 +48,12 @@ export default function LoginPage() {
       const data = await login(form.email, form.password)
       setTokens(data.access_token, data.refresh_token, rememberMe)
       refreshUser()
+      success("Welcome back!")
       navigate("/forms")
     } catch (err) {
-      setErrors({ general: err instanceof Error ? err.message : "Something went wrong. Please try again." })
+      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again."
+      showError(msg)
+      setErrors({ general: msg })
     } finally {
       setLoading(false)
     }
