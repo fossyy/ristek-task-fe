@@ -17,7 +17,7 @@ export default function LoginPage() {
   }, [user, authLoading, navigate])
 
   const [form, setForm] = useState({ email: "", password: "" })
-  const [rememberMe, setRememberMe] = useState(false)
+  const [rememberMe, setRememberMe] = useState(true)
   const [errors, setErrors] = useState<Partial<typeof form & { general: string }>>({})
   const [loading, setLoading] = useState(false)
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
                 error={errors.password}
               />
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
                 <label className="flex items-center gap-2 text-sm text-muted-foreground">
                   <input
                     type="checkbox"
@@ -108,12 +108,6 @@ export default function LoginPage() {
                   />
                   Remember me
                 </label>
-                <Link
-                  to="#"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  Forgot password?
-                </Link>
               </div>
 
               <FormButton
