@@ -16,8 +16,6 @@ export default function RegisterPage() {
     }, [user, authLoading, navigate])
 
     const [form, setForm] = useState({
-        firstName: "",
-        lastName: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -33,8 +31,6 @@ export default function RegisterPage() {
     function validate() {
         const newErrors: Partial<typeof form> = {}
 
-        if (!form.firstName.trim()) newErrors.firstName = "First name is required"
-        if (!form.lastName.trim()) newErrors.lastName = "Last name is required"
         if (!form.email.trim()) newErrors.email = "Email is required"
         if (form.password.length < 8)
             newErrors.password = "Must be at least 8 characters"
@@ -75,32 +71,6 @@ export default function RegisterPage() {
 
                     <div className="rounded-xl border border-border bg-card p-6 shadow-sm animate-float-in" style={{ animationDelay: '0.15s' }}>
                         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                            <div className="flex gap-3">
-                                <FormInput
-                                    label="First name"
-                                    type="text"
-                                    name="firstName"
-                                    placeholder="bagas"
-                                    required
-                                    autoComplete="given-name"
-                                    className="w-full"
-                                    value={form.firstName}
-                                    onChange={handleChange}
-                                    error={errors.firstName}
-                                />
-                                <FormInput
-                                    label="Last name"
-                                    type="text"
-                                    name="lastName"
-                                    placeholder="pacil"
-                                    required
-                                    autoComplete="family-name"
-                                    className="w-full"
-                                    value={form.lastName}
-                                    onChange={handleChange}
-                                    error={errors.lastName}
-                                />
-                            </div>
                             <FormInput
                                 label="Email"
                                 type="email"
