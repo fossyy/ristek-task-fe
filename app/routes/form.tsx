@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link, useParams, useNavigate } from "react-router"
 import {
+  AlertTriangle,
   ArrowLeft,
   BarChart3,
   Calendar,
@@ -27,6 +28,10 @@ export default function FormPreviewPage() {
   const [error, setError] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [confirmText, setConfirmText] = useState("")
+  const [showEditWarning, setShowEditWarning] = useState(false)
+
+  const CONFIRM_PHRASE = "Aku suka femboy jadi hapus form ini"
 
   useEffect(() => {
     if (!id) return
@@ -149,17 +154,32 @@ export default function FormPreviewPage() {
                       Responses
                     </FormButton>
                   </Link>
-                  <Link to={`/form/${id}/edit`}>
-                    <FormButton type="button" variant="ghost" size="sm">
+                  {form.response_count > 0 ? (
+                    <FormButton
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowEditWarning(true)}
+                    >
                       <Pencil className="h-4 w-4" />
                       Edit
                     </FormButton>
-                  </Link>
+                  ) : (
+                    <Link to={`/form/${id}/edit`}>
+                      <FormButton type="button" variant="ghost" size="sm">
+                        <Pencil className="h-4 w-4" />
+                        Edit
+                      </FormButton>
+                    </Link>
+                  )}
                   <FormButton
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowDeleteConfirm(true)}
+                    onClick={() => {
+                      setConfirmText("")
+                      setShowDeleteConfirm(true)
+                    }}
                     className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -206,29 +226,110 @@ export default function FormPreviewPage() {
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="mx-4 w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-lg">
-            <h2 className="text-lg font-semibold text-card-foreground">Delete Form</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Are you sure you want to delete this form? This action cannot be
-              undone.
+            {form.response_count > 0 ? (
+              <>
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                  <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                </div>
+                <h2 className="text-center text-lg font-semibold text-card-foreground">Delete Form with Responses</h2>
+                <p className="mt-2 text-center text-sm text-muted-foreground">
+                  This form has <span className="font-semibold text-foreground">{form.response_count} response{form.response_count > 1 ? "s" : ""}</span>. Deleting it will permanently remove all responses. This action cannot be undone.
+                </p>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  To confirm, type <span className="font-mono font-semibold text-foreground">{CONFIRM_PHRASE}</span> below:
+                </p>
+                <input
+                  type="text"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  placeholder="Type the phrase above"
+                  className="mt-2 w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  autoFocus
+                />
+                <div className="mt-5 flex items-center justify-end gap-3">
+                  <FormButton
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowDeleteConfirm(false)}
+                    disabled={deleting}
+                  >
+                    Cancel
+                  </FormButton>
+                  <FormButton
+                    type="button"
+                    size="sm"
+                    onClick={handleDelete}
+                    disabled={deleting || confirmText !== CONFIRM_PHRASE}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {deleting ? "Deleting..." : "Delete Forever"}
+                  </FormButton>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-semibold text-card-foreground">Delete Form</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Are you sure you want to delete this form? This action cannot be
+                  undone.
+                </p>
+                <div className="mt-6 flex items-center justify-end gap-3">
+                  <FormButton
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowDeleteConfirm(false)}
+                    disabled={deleting}
+                  >
+                    Cancel
+                  </FormButton>
+                  <FormButton
+                    type="button"
+                    size="sm"
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {deleting ? "Deleting..." : "Delete"}
+                  </FormButton>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showEditWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-lg">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+              <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+            </div>
+            <h2 className="text-center text-lg font-semibold text-card-foreground">Cannot Edit Form</h2>
+            <p className="mt-2 text-center text-sm text-muted-foreground">
+              This form already has <span className="font-semibold text-foreground">{form.response_count} response{form.response_count > 1 ? "s" : ""}</span>. Editing a form with existing responses is not allowed to preserve data integrity.
             </p>
-            <div className="mt-6 flex items-center justify-end gap-3">
+            <div className="mt-5 flex flex-col gap-2">
+              <Link to={`/form/${id}/responses`}>
+                <FormButton
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  View Responses
+                </FormButton>
+              </Link>
               <FormButton
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => setShowDeleteConfirm(false)}
-                disabled={deleting}
+                className="w-full"
+                onClick={() => setShowEditWarning(false)}
               >
-                Cancel
-              </FormButton>
-              <FormButton
-                type="button"
-                size="sm"
-                onClick={handleDelete}
-                disabled={deleting}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                {deleting ? "Deleting..." : "Delete"}
+                Close
               </FormButton>
             </div>
           </div>
